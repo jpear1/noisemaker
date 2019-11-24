@@ -1,68 +1,104 @@
-Noisemaker is a digital audio synthesizer library. Right now, the user designs a sound and that sound can be written to a wav file.
+Noisemaker is a digital audio synthesizer library. Usingg this library, the user can design a sound and that sound can be written to a wav file.
 
 # Installation
 
-The only software required for this library is a C++ compiler and the C++ standard library.
+**Disclaimer**: Installation instructions are given for Windows and MacOS but serious bugs exist on the Windows build and the Mac build is untested.
+
+For starters, you'll need a C++ compiler and the C++ standard library.
 Instructions for installing a compiler can be found [here](https://www.cs.odu.edu/~zeil/cs250PreTest/latest/Public/installingACompiler)
-The project must be compiled with c++11 or higher.
+The project must be compiled with C++11 or higher.
 
-## Mac OS preliminaries
+**For Windows Users:** Note that if you use MinGW (as is recommended) on Windows, you'll have to make sure you install the `mingw32-gcc-g++-bin` and `mingw32-make-bin` packages and add them to your path. Otherwise you'll have to use a different generator for CMake and you're on your own.
 
-You need to install `cmake`.  Instructions are [here](http://macappstore.org/cmake/)
+## Other requisite software
 
-If you already have `brew` installed, you should be able to do:
+You need to install `cmake`.
 
+On Linux, you can simply run
+
+```
+apt install cmake
+```
+Or on MacOS, run
 ```
 brew install cmake
 ```
+For Windows systems, you can find the latest version of CMake [here](https://cmake.org/download/). Make sure you add cmake to your path.
 
-You also need these to install the documentation.   The cmake may error out if you don't have these installed:
 
+## Libraries required for building the documentation 
+
+You need to have [Python 3](https://www.python.org/downloads/) installed no matter what operating system you're using. On Windows, make sure that you add python and pip3 to your path.
+
+Linux:
 ```
-brew install sphinx doxygen 
+apt install doxygen
+pip3 install sphinx sphinx_rtd_theme breathe
 ```
+MacOS:
+```
+brew install doxygen
+pip3 install sphinx sphinx_rtd_theme breathe
+```
+Windows:
 
-Finally, you need something called `breathe` which is Python software installed
-with `pip` (or `pip3`, depending on your Python install) If you don't already have `pip` installed, that's another rabbit hole (left as an exercise
-to the reader.)
+Doxygen can be downloaded [here](http://www.doxygen.nl/download.html).
+Then you can run:
+```
+pip3 install sphinx sphinx_rtd_theme breathe
+```
 
 
 
 
 ## Install instructions
 
-To start, make a build directory:
+To start, make a build directory in the project:
 
 ```
 mkdir build
 cd build
+```
+Then run, on MacOS or Linux, run
+```
 cmake ..
+```
+Or, to build the documentation too, run
+
+```
+cmake -DBUILD_DOCUMENTATION ..
+```
+On Windows, you should run
+```
+cmake .. -G "MinGW Makefiles"
+```
+Again, to build the documentation, you'll need to run
+
+```
+cmake -DBUILD_DOCUMENTATION -G "MinGW Makefiles" ..
 ```
 
 If it works, it should look something like this:
 
 ```
-169-231-158-36:build pconrad$ cmake ..
--- The C compiler identification is AppleClang 10.0.0.10001145
--- The CXX compiler identification is AppleClang 10.0.0.10001145
--- Check for working C compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc
--- Check for working C compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -- works
+jack@the-machine:/mnt/c/Users/99jac/Documents/noisemaker/build$ cmake ..
+-- The C compiler identification is GNU 7.4.0
+-- The CXX compiler identification is GNU 7.4.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
 -- Detecting C compiler ABI info
 -- Detecting C compiler ABI info - done
 -- Detecting C compile features
 -- Detecting C compile features - done
--- Check for working CXX compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++
--- Check for working CXX compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ -- works
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
 -- Detecting CXX compiler ABI info
 -- Detecting CXX compiler ABI info - done
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
--- Found Doxygen: /usr/local/bin/doxygen (found version "1.8.16") found components:  doxygen missing components:  dot
--- Found Sphinx: /Library/Frameworks/Python.framework/Versions/3.6/bin/sphinx-build  
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/pconrad/github/ccs-1l-f19/noisemaker/build
-169-231-158-36:build pconrad$ 
+-- Build files have been written to: /mnt/c/Users/99jac/Documents/noisemaker/build
 ```
 
 The next step is to do:
@@ -73,9 +109,8 @@ cmake --build .
 
 Now you can do several things:
 
-* *Read the docs* : If all goes as planned, among other things you 
-  should now find
-  a file called `build/docs/sphinx/index.html` and if you point a browser
+* *Read the docs* : If you build the documentation and all goes as planned, among other things you 
+  should now find a file called `build/docs/sphinx/index.html` and if you point a browser
   at it, you can read the documentation.
 * Run one of the already written main programs that makes some sound.
   ```
@@ -110,7 +145,7 @@ cmake --build .
 
 # Usage
 
-The basic workflow in noisemaker is as follows:
+The basic workflow in Noisemaker is as follows:
 1. Create a custom instrument using Noisemaker classes
 2. Read the samples of that instrument into an array
 3. Write those samples into a wav file
