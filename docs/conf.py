@@ -30,6 +30,8 @@ release = '0.1'
 # readthedocs setup
 import subprocess, os
 
+print("in conf.py")
+
 def configureDoxyfile(input_dir, output_dir):
     with open('Doxyfile.in', 'r') as file :
         filedata = file.read()
@@ -40,6 +42,17 @@ def configureDoxyfile(input_dir, output_dir):
     with open('Doxyfile', 'w') as file:
         file.write(filedata)
 
+# for debugging
+
+def list_files(startpath):
+    for root, dirs, files in os.walk(startpath):
+        level = root.replace(startpath, '').count(os.sep)
+        indent = ' ' * 4 * (level)
+        print('{}{}/'.format(indent, os.path.basename(root)))
+        subindent = ' ' * 4 * (level + 1)
+        for f in files:
+            print('{}{}'.format(subindent, f))
+
 # Check if we're running on Read the Docs' servers
 read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
@@ -47,10 +60,13 @@ breathe_projects = {}
 
 if read_the_docs_build:
     input_dir = '../src'
-    output_dir = 'build'
+    output_dir = '/home/docs/checkouts/readthedocs.org/user_builds/noise-maker/checkouts/latest/docs/build'
     configureDoxyfile(input_dir, output_dir)
     subprocess.call('doxygen', shell=True)
-    breathe_projects['Noisemaker'] = output_dir + '/xml'
+    breathe_projects['Noisemaker'] = "/home/docs/checkouts/readthedocs.org/user_builds/noise-maker/checkouts/latest/docs/build/xml"
+    print("breathe_dir = " + breathe_projects['Noisemaker'])
+    print("file dir" + os.path.dirname(os.path.realpath(__file__)))
+    list_files(os.path.dirname(os.path.realpath(__file__)))
 
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -81,4 +97,3 @@ html_theme = 'sphinx_rtd_theme'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
